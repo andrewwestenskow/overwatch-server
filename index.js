@@ -14,9 +14,6 @@ app.use(
     secret: SESSION_SECRET,
   })
 )
-
-app.use('/api', routes)
-
 massive({
   connectionString: CONNECTION_STRING,
   ssl: { rejectUnauthorized: false },
@@ -25,3 +22,11 @@ massive({
   console.log('db set')
   app.listen(SERVER_PORT, () => console.log(`listening on port ${SERVER_PORT}`))
 })
+
+app.use((req, res, next) => {
+  const db = req.app.get('db')
+  req.db = db
+  next()
+})
+
+app.use('/api', routes)

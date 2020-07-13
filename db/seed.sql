@@ -5,7 +5,8 @@ DROP TABLE IF EXISTS maps;
 DROP TABLE IF EXISTS game_rounds;
 DROP TABLE IF EXISTS hero_roles;
 DROP TABLE IF EXISTS game_modes;
-DROP TABLE IF EXISTS player;
+DROP TABLE IF EXISTS platforms;
+DROP TABLE IF EXISTS players;
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE "users" (
@@ -14,10 +15,16 @@ CREATE TABLE "users" (
   "hash" text
 );
 
+CREATE TABLE "platforms" (
+  "id" serial PRIMARY KEY,
+  "name" varchar(255)
+);
+
 CREATE TABLE "players" (
   "id" serial PRIMARY KEY,
   "name" varchar(255),
-  "user_id" int
+  "user_id" int,
+  "platform_id" int
 );
 
 CREATE TABLE "game_modes" (
@@ -70,6 +77,8 @@ CREATE TABLE "player_results_heroes" (
 
 ALTER TABLE "players" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 
+ALTER TABLE "players" ADD FOREIGN KEY ("platform_id") REFERENCES "platforms" ("id");
+
 ALTER TABLE "maps" ADD FOREIGN KEY ("game_mode_id") REFERENCES "game_modes" ("id");
 
 ALTER TABLE "heroes" ADD FOREIGN KEY ("hero_role_id") REFERENCES "hero_roles" ("id");
@@ -88,6 +97,8 @@ ALTER TABLE "player_results_heroes" ADD FOREIGN KEY ("game_round_id") REFERENCES
 
 -- INSERT STANDARD DATA
 
+INSERT INTO platforms (name)
+VALUES ('pc'), ('xbl'), ('psn'), ('switch');
 
 INSERT INTO game_modes (name)
 VALUES ('control'), ('assault'), ('escort'), ('hybrid');
