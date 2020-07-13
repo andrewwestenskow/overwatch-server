@@ -5,14 +5,16 @@ DROP TABLE IF EXISTS maps;
 DROP TABLE IF EXISTS game_rounds;
 DROP TABLE IF EXISTS hero_roles;
 DROP TABLE IF EXISTS game_modes;
-DROP TABLE IF EXISTS platforms;
 DROP TABLE IF EXISTS players;
+DROP TABLE IF EXISTS platforms;
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE "users" (
   "id" serial PRIMARY KEY,
   "email" varchar(255),
-  "hash" text
+  "hash" text,
+  "token" text,
+  "token_expire" text
 );
 
 CREATE TABLE "platforms" (

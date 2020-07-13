@@ -1,6 +1,21 @@
-module.exports = (req, res, next) => {
-  if (!req.session.user) {
-    return res.status(403).send('Not logged in')
+const moment = require('moment')
+
+module.exports = async (req, res, next) => {
+  if (req.session.user) {
+    next()
+  } else {
+    const token = req.get('Authorization')
+    const user = await req.db.users.find({ token })
+    if (!user) {
+      return res.status(401).send('Incorrect Authorization header')
+    }
+    const now = moment()
+    const expire = moment(user.token_expire)
+    if (now.isAfter(expire)) {
+      return res.status(403).send('Unauthorized')
+    } else {
+      req.session.user = user
+      next()
+    }
   }
-  next()
 }

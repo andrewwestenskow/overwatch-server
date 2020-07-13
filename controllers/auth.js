@@ -1,4 +1,6 @@
 const bcrypt = require('bcryptjs')
+const { v4: uuid } = require('uuid')
+const getExpiryDate = require('../utils/getExpiryDate')
 
 module.exports = {
   register: async (req, res) => {
@@ -14,8 +16,10 @@ module.exports = {
     const salt = bcrypt.genSaltSync(10)
 
     const hash = bcrypt.hashSync(password, salt)
+    const token = uuid()
+    const token_expire = getExpiryDate(6)
 
-    const newUser = await db.users.save({ email, hash })
+    const newUser = await db.users.insert({ email, hash, token, token_expire })
 
     delete newUser.hash
 
@@ -38,13 +42,19 @@ module.exports = {
     if (!authenticated) {
       return res.status(403).send('Could not log in')
     }
+    const token = uuid()
+    const token_expire = getExpiryDate(6)
+
+    await req.db.users.save({ id: existingUser.id, token, token_expire })
 
     delete existingUser.hash
     req.session.user = existingUser
 
     res.status(200).send(req.session.user)
   },
-  logout: (req, res) => {
+  logout: async (req, res) => {
+    const { id } = req.session.user
+    await req.db.users.save({ id, token: null, token_expire: null })
     req.session.destroy()
 
     res.sendStatus(201)
