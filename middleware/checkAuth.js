@@ -5,15 +5,17 @@ module.exports = async (req, res, next) => {
     next()
   } else {
     const token = req.get('Authorization')
-    const user = await req.db.users.find({ token })
+    const [user] = await req.db.users.find({ token })
     if (!user) {
       return res.status(401).send('Incorrect Authorization header')
     }
     const now = moment()
     const expire = moment(user.token_expire)
     if (now.isAfter(expire)) {
+      await req.db.users.save({ id: user.id, token: null, token_expire: null })
       return res.status(403).send('Unauthorized')
     } else {
+      delete user.hash
       req.session.user = user
       next()
     }

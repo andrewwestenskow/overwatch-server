@@ -45,8 +45,11 @@ module.exports = {
     const token = uuid()
     const token_expire = getExpiryDate(6)
 
-    await req.db.users.save({ id: existingUser.id, token, token_expire })
-
+    const update = await req.db.users.save({
+      id: existingUser.id,
+      token,
+      token_expire,
+    })
     delete existingUser.hash
     req.session.user = existingUser
 
