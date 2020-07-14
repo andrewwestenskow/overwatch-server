@@ -1,12 +1,21 @@
 require('dotenv').config()
 const express = require('express')
+const cors = require('cors')
 const session = require('express-session')
 const app = express()
 const massive = require('massive')
 const { SERVER_PORT, CONNECTION_STRING, SESSION_SECRET } = process.env
 const routes = require('./routes')
 
+app.use((req, res, next) => {
+  console.log('\x1b[36m%s\x1b[0m', `\n${req.method} ${req.path}`)
+  next()
+})
+
+app.use(cors())
+
 app.use(express.json())
+
 app.use(
   session({
     resave: false,
