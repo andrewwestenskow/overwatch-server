@@ -55,6 +55,9 @@ module.exports = {
 
     res.status(200).send(req.session.user)
   },
+  restoreSession: (req, res) => {
+    res.status(200).send(req.session.user)
+  },
   logout: async (req, res) => {
     const { id } = req.session.user
     await req.db.users.save({ id, token: null, token_expire: null })
