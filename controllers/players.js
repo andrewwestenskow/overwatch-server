@@ -17,8 +17,8 @@ module.exports = {
     const { id: user_id } = req.session.user
     try {
       const players = await req.db.get_user_players({ user_id })
-      const playerDetails = await applyDetailsToPlayers(players)
-      res.status(200).send(playerDetails)
+      // const playerDetails = await applyDetailsToPlayers(players)
+      res.status(200).send(players)
     } catch (error) {
       res.status(500).send(error)
     }
@@ -27,6 +27,7 @@ module.exports = {
     const { playerId: id } = req.params
     try {
       const player = await req.db.players.find({ id })
+      req.session.user.player = player
       res.status(200).send(player)
     } catch (error) {
       res.status(500).send(error)
