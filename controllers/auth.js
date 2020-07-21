@@ -28,32 +28,37 @@ module.exports = {
     res.status(200).send(req.session.user)
   },
   login: async (req, res) => {
-    const { email, password } = req.body
-    const db = req.app.get('db')
+    try {
+      const { email, password } = req.body
 
-    const [existingUser] = await db.users.find({ email })
+      const db = req.app.get('db')
 
-    if (!existingUser) {
-      return res.status(404).send('User does not exist')
+      const [existingUser] = await db.users.find({ email })
+
+      if (!existingUser) {
+        return res.status(404).send('User does not exist')
+      }
+
+      const authenticated = bcrypt.compareSync(password, existingUser.hash)
+
+      if (!authenticated) {
+        return res.status(403).send('Could not log in')
+      }
+      const token = uuid()
+      const token_expire = getExpiryDate(6)
+
+      const update = await req.db.users.save({
+        id: existingUser.id,
+        token,
+        token_expire,
+      })
+      delete existingUser.hash
+      req.session.user = { ...existingUser, token: update.token }
+      res.status(200).send(req.session.user)
+    } catch (error) {
+      console.log(error)
+      res.status(500).send(error)
     }
-
-    const authenticated = bcrypt.compareSync(password, existingUser.hash)
-
-    if (!authenticated) {
-      return res.status(403).send('Could not log in')
-    }
-    const token = uuid()
-    const token_expire = getExpiryDate(6)
-
-    const update = await req.db.users.save({
-      id: existingUser.id,
-      token,
-      token_expire,
-    })
-    delete existingUser.hash
-    req.session.user = existingUser
-
-    res.status(200).send(req.session.user)
   },
   restoreSession: (req, res) => {
     res.status(200).send(req.session.user)
