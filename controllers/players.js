@@ -1,11 +1,18 @@
 const applyDetailsToPlayers = require('../utils/applyDetailsToPlayer')
+const getPlayerDetails = require('../utils/getPlayerDetails')
 
 module.exports = {
   createPlayer: async (req, res) => {
     const { id: user_id } = req.session.user
     const { name, platform_id } = req.body
     try {
-      const player = await req.db.players.insert({ name, user_id, platform_id })
+      const details = await getPlayerDetails(name, platform_id)
+      const player = await req.db.players.insert({
+        name,
+        user_id,
+        platform_id,
+        ...details,
+      })
       req.session.user.player = player
       res.status(200).send(player)
     } catch (error) {
@@ -17,9 +24,7 @@ module.exports = {
     const { id: user_id } = req.session.user
     try {
       const players = await req.db.get_user_players({ user_id })
-      const playerDetails = await applyDetailsToPlayers(players)
-      console.log(playerDetails)
-      res.status(200).send(playerDetails)
+      res.status(200).send(players)
     } catch (error) {
       res.status(500).send(error)
     }

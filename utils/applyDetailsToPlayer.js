@@ -7,7 +7,7 @@ module.exports = async (players) => {
       const { platform, name } = player
       try {
         const { data } = await axios.get(
-          `http://owapi.io/profile/${platform}/us/${name}`
+          `https://ow-api.com/v1/stats/${platform}/us/${name}/profile`
         )
         if (data.private) {
           return { ...player, private: true }
