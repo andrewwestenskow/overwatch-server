@@ -9,7 +9,11 @@ module.exports = async (players) => {
         const { data } = await axios.get(
           `http://owapi.io/profile/${platform}/us/${name}`
         )
-        return { ...player, ...data }
+        if (data.private) {
+          return { ...player, private: true }
+        } else {
+          return { ...player, ...data }
+        }
       } catch (error) {
         return { ...player, private: true }
       }
