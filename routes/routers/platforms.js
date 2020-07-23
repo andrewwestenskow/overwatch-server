@@ -5,6 +5,6 @@ const checkAuth = require('../../middleware/checkAuth')
 
 const { getAllPlatforms } = platforms
 
-router.get('/', checkAuth, getAllPlatforms)
+router.get('/', getAllPlatforms)
 
 module.exports = router

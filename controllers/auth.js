@@ -1,10 +1,11 @@
 const bcrypt = require('bcryptjs')
 const { v4: uuid } = require('uuid')
 const getExpiryDate = require('../utils/getExpiryDate')
+const getPlayerDetails = require('../utils/getPlayerDetails')
 
 module.exports = {
   register: async (req, res) => {
-    const { email, password } = req.body
+    const { email, password, name, platform_id } = req.body
     const db = req.app.get('db')
 
     const [existingUser] = await db.users.find({ email })
@@ -21,9 +22,20 @@ module.exports = {
 
     const newUser = await db.users.insert({ email, hash, token, token_expire })
 
+    console.log(newUser)
+
     delete newUser.hash
 
     req.session.user = newUser
+
+    const details = await getPlayerDetails(name, platform_id)
+    const player = await req.db.players.insert({
+      name,
+      user_id: newUser.id,
+      platform_id,
+      ...details,
+    })
+    req.session.user.player = player
 
     res.status(200).send(req.session.user)
   },
