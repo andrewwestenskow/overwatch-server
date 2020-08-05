@@ -26,7 +26,12 @@ CREATE TABLE "players" (
   "id" serial PRIMARY KEY,
   "name" varchar(255),
   "user_id" int,
-  "platform_id" int
+  "platform_id" int,
+  "portrait" text,
+  "tank_sr" int,
+  "damage_sr" int,
+  "support_sr" int,
+  "private" boolean
 );
 
 CREATE TABLE "game_modes" (
@@ -109,7 +114,7 @@ INSERT INTO hero_roles (name, image)
 VALUES ('tank', 'https://overpicker.win/images/assets/tank.png'), ('damage', 'https://overpicker.win/images/assets/damage.png'), ('support', 'https://overpicker.win/images/assets/support.png');
 
 INSERT INTO game_rounds (name)
-VALUES ('attack'), ('defense'), ('control');
+VALUES ('attack'), ('defense'), ('both'), ('control');
 
 INSERT INTO maps (name, game_mode_id, image)
 VALUES ('Busan', 1, 'https://static.playoverwatch.com/img/pages/maps/images/busan.jpg'), ('Ilios', 1, 'https://static.playoverwatch.com/img/pages/maps/images/ilios.jpg'), ('Lijiang Tower', 1, 'https://static.playoverwatch.com/img/pages/maps/images/lijiang-tower.jpg'), ('Nepal', 1, 'https://static.playoverwatch.com/img/pages/maps/images/nepal.jpg'), ('Oasis', 1, 'https://static.playoverwatch.com/img/pages/maps/images/oasis.jpg'), ('Hanamura', 2, 'https://static.playoverwatch.com/img/pages/maps/images/hanamura.jpg'), ('Horizon Lunar Colony', 2, 'https://static.playoverwatch.com/img/pages/maps/images/horizon-lunar-colony.jpg'), ('Paris', 2, 'https://static.playoverwatch.com/img/pages/maps/images/paris.jpg'), ('Temple of Anubis', 2, 'https://static.playoverwatch.com/img/pages/maps/images/temple-of-anubis.jpg'), ('Volskaya Industries', 2, 'https://static.playoverwatch.com/img/pages/maps/images/volskaya-industries.jpg'), ('Dorado', 3, 'https://static.playoverwatch.com/img/pages/maps/images/dorado.jpg'), ('Havana', 3, 'https://static.playoverwatch.com/img/pages/maps/images/havana.jpg'), ('Junkertown', 3, 'https://static.playoverwatch.com/img/pages/maps/images/junkertown.jpg'), ('Rialto', 3, 'https://static.playoverwatch.com/img/pages/maps/images/rialto.jpg'), ('Route 66', 3, 'https://static.playoverwatch.com/img/pages/maps/images/route-66.jpg'), ('Watchpoint: Gibralter', 3, 'https://static.playoverwatch.com/img/pages/maps/images/watchpoint-gibraltar.jpg'), ('Blizzard World', 4, 'https://static.playoverwatch.com/img/pages/maps/images/blizzard-world.jpg'), ('Eichenwalde', 4, 'https://static.playoverwatch.com/img/pages/maps/images/eichenwalde.jpg'), ('Hollywood', 4, 'https://static.playoverwatch.com/img/pages/maps/images/hollywood.jpg'), ('King''s Row', 4, 'https://static.playoverwatch.com/img/pages/maps/images/kings-row.jpg'), ('Numbani', 4, 'https://static.playoverwatch.com/img/pages/maps/images/numbani.jpg');
