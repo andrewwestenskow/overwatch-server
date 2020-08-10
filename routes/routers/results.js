@@ -6,7 +6,7 @@ const checkAuth = require('../../middleware/checkAuth')
 
 const { recordResults, getResults } = results
 
-router.post('/:email', checkAuth, compareEmails, recordResults)
-router.get('/:email', checkAuth, compareEmails, getResults)
+router.post('/:player_id', checkAuth, recordResults)
+router.get('/:player_id', checkAuth, getResults)
 
 module.exports = router
