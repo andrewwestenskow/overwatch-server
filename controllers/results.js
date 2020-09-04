@@ -1,3 +1,12 @@
+const convertResults = (arr, limit = 5) =>
+  arr
+    .filter((e) => e.games_played >= limit)
+    .map((e) => ({
+      ...e,
+      win_rate: ((e.win_count / e.games_played) * 100).toFixed(2),
+    }))
+    .sort((a, b) => b.win_rate - a.win_rate)
+
 module.exports = {
   recordResults: async (req, res) => {
     const { player_id } = req.params
@@ -20,10 +29,15 @@ module.exports = {
       res.status(500).send(error)
     }
   },
-  getResults: (req, res) => {
+  getResults: async (req, res) => {
     const { player_id } = req.params
-
-    console.log(player_id)
-    res.sendStatus(200)
+    const heroResults = await req.db.results.get_all_hero_win_rate(player_id)
+    const applicableHeros = convertResults(heroResults)
+    console.log(applicableHeros)
+    const mapResults = await req.db.results.get_all_map_win_rate(player_id)
+    const applicableMaps = convertResults(mapResults, 1)
+    res
+      .status(200)
+      .send({ heroResults: applicableHeros, mapResults: applicableMaps })
   },
 }
