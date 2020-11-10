@@ -33,11 +33,16 @@ module.exports = {
     const { player_id } = req.params
     const heroResults = await req.db.results.get_all_hero_win_rate(player_id)
     const applicableHeros = convertResults(heroResults)
-    console.log(applicableHeros)
     const mapResults = await req.db.results.get_all_map_win_rate(player_id)
     const applicableMaps = convertResults(mapResults, 1)
     res
       .status(200)
       .send({ heroResults: applicableHeros, mapResults: applicableMaps })
+  },
+  getAllHeroResults: async (req, res) => {
+    const { player_id } = req.params
+    const heroResults = await req.db.results.get_all_hero_stats(player_id)
+    const applicableResults = convertResults(heroResults, 0)
+    res.status(200).send(applicableResults)
   },
 }
