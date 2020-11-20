@@ -1,10 +1,13 @@
 const convertResults = (arr, limit = 5) =>
   arr
     .filter((e) => e.games_played >= limit)
-    .map((e) => ({
-      ...e,
-      win_rate: ((e.win_count / e.games_played) * 100).toFixed(2),
-    }))
+    .map((e) => {
+      const winRate = ((e.win_count / e.games_played) * 100).toFixed(2)
+      return {
+        ...e,
+        win_rate: winRate !== 'NaN' ? winRate : 0,
+      }
+    })
     .sort((a, b) => b.win_rate - a.win_rate)
 
 module.exports = {

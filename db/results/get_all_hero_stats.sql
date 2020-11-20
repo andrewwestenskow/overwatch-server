@@ -3,7 +3,7 @@ SELECT h.id AS hero_id, h.name, COUNT(prh.id) AS games_played,  COUNT(win) filte
 FROM player_results pr
 FULL JOIN player_results_heroes prh ON pr.id = prh.player_results_id
 FULL JOIN heroes h on prh.hero_id = h.id
-WHERE player_id = 1
+WHERE player_id = $1
 GROUP BY h.id, h.name, h.image
 ORDER BY games_played DESC
 )
