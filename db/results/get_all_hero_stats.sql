@@ -8,6 +8,6 @@ GROUP BY h.id, h.name, h.image
 ORDER BY games_played DESC
 )
 
-SELECT h.id, h.name, h.image, ps.games_played, ps.win_count, ps.lose_count FROM heroes h
+SELECT h.id, h.name, h.image, ps.games_played, ps.win_count, ps.lose_count, get_hero_best_map($1, h.id) as best, get_hero_worst_map($1, h.id) as worst FROM heroes h
 FULL JOIN player_stats ps ON h.id = ps.hero_id
-ORDER BY (ps.win_count / ps.games_played) ASC
+ORDER BY (ps.win_count / ps.games_played) DESC NULLS LAST;
