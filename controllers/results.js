@@ -48,4 +48,10 @@ module.exports = {
     const applicableResults = convertResults(heroResults, 0)
     res.status(200).send(applicableResults)
   },
+  getAllMapResults: async (req, res) => {
+    const { player_id } = req.params
+    const mapResults = await req.db.results.get_all_map_stats(player_id)
+    const applicableResults = convertResults(mapResults, 0)
+    res.status(200).send(applicableResults)
+  },
 }
